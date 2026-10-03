@@ -1,0 +1,71 @@
+{
+  "info": {
+    "name": "Event Slot Booker",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000" },
+    { "key": "slotId", "value": "" },
+    { "key": "bookingId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Create Slot",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["const r = pm.response.json();", "if (r.data && r.data._id) pm.collectionVariables.set('slotId', r.data._id);"] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"eventName\": \"Node.js Workshop\",\n  \"date\": \"2026-11-10\",\n  \"startTime\": \"10:00\",\n  \"endTime\": \"12:00\",\n  \"location\": \"Lab 1\",\n  \"capacity\": 2\n}" },
+        "url": "{{baseUrl}}/api/slots"
+      }
+    },
+    {
+      "name": "Get All Slots",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/slots" }
+    },
+    {
+      "name": "Get Slot By ID",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/slots/{{slotId}}" }
+    },
+    {
+      "name": "Book Slot",
+      "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["const r = pm.response.json();", "if (r.data && r.data._id) pm.collectionVariables.set('bookingId', r.data._id);"] } }],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"studentName\": \"Rahul Patel\",\n  \"email\": \"rahul@example.com\",\n  \"rollNo\": \"101\"\n}" },
+        "url": "{{baseUrl}}/api/slots/{{slotId}}/book"
+      }
+    },
+    {
+      "name": "Book Slot (2nd student)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"studentName\": \"Priya Shah\",\n  \"email\": \"priya@example.com\",\n  \"rollNo\": \"102\"\n}" },
+        "url": "{{baseUrl}}/api/slots/{{slotId}}/book"
+      }
+    },
+    {
+      "name": "Book Slot (3rd student - should be Full)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"studentName\": \"Amit Mehta\",\n  \"email\": \"amit@example.com\",\n  \"rollNo\": \"103\"\n}" },
+        "url": "{{baseUrl}}/api/slots/{{slotId}}/book"
+      }
+    },
+    {
+      "name": "Get Slot Bookings",
+      "request": { "method": "GET", "url": "{{baseUrl}}/api/slots/{{slotId}}/bookings" }
+    },
+    {
+      "name": "Cancel Booking",
+      "request": { "method": "PATCH", "url": "{{baseUrl}}/api/bookings/{{bookingId}}/cancel" }
+    },
+    {
+      "name": "Delete Slot",
+      "request": { "method": "DELETE", "url": "{{baseUrl}}/api/slots/{{slotId}}" }
+    }
+  ]
+}
